@@ -50,6 +50,8 @@ members = [
     "examples/overflow/guest",
 
 
+    "examples/factors",
+    "examples/factors/guest",
 ]
 
 [features]

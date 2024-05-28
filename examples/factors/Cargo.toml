@@ -1,0 +1,11 @@
+[package]
+name = "factors"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+jolt-sdk = { path = "../../jolt-sdk", features = ["host"] }
+guest = { package = "factors-guest", path = "./guest" }
+postcard = { version = "1.0.8", default-features = false, features = [
+    "use-std",
+] }
