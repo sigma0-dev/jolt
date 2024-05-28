@@ -46,6 +46,8 @@ members = [
     "examples/stdlib/guest",
     "examples/muldiv",
     "examples/muldiv/guest",
+    "examples/factors",
+    "examples/factors/guest",
 ]
 
 [features]
