@@ -44,6 +44,7 @@ struct MacroBuilder {
 
 impl MacroBuilder {
     fn new(attr: AttributeArgs, func: ItemFn) -> Self {
+        let func = strip_private_arg_attr(func);
         let func_args = Self::get_func_args(&func);
         #[cfg(feature = "guest-std")]
         let std = true;
@@ -552,5 +553,30 @@ impl MacroBuilder {
                 result.is_ok()
             }
         }
+    }
+}
+
+fn strip_private_arg_attr(func: ItemFn) -> ItemFn {
+    let inputs = func.sig.inputs.iter().map(strip_private_attr).collect();
+    ItemFn {
+        sig: syn::Signature { inputs, ..func.sig },
+        ..func
+    }
+}
+
+fn strip_private_attr(arg: &syn::FnArg) -> syn::FnArg {
+    match arg {
+        syn::FnArg::Typed(ref pat_type @ PatType { ref attrs, .. }) => {
+            let attrs = attrs
+                .iter()
+                .filter(|attr| !attr.path.is_ident("private"))
+                .cloned()
+                .collect();
+            syn::FnArg::Typed(PatType {
+                attrs,
+                ..pat_type.clone()
+            })
+        }
+        _ => arg.clone(),
     }
 }
